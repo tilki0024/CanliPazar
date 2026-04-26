@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CanlıPazar - Hayvan Alım Satım Platformu</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://canlipazar.net/">
+    <meta property="og:title" content="CanlıPazar - Hayvan Alım Satım Platformu">
+    <meta property="og:description" content="Büyükbaş ve küçükbaş hayvan alım satımı için güvenilir platform">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://canlipazar.net/">
+    <meta property="twitter:title" content="CanlıPazar - Hayvan Alım Satım Platformu">
+    <meta property="twitter:description" content="Büyükbaş ve küçükbaş hayvan alım satımı için güvenilir platform">
+
+    <style media="screen">
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      body {
+        background: linear-gradient(135deg, #2E7D32 0%, #8BC34A 100%);
+        color: rgba(0,0,0,0.87);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      #container {
+        background: white;
+        max-width: 400px;
+        width: 90%;
+        margin: 20px auto;
+        padding: 40px 24px;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        text-align: center;
+      }
+      
+      .logo {
+        font-size: 64px;
+        margin-bottom: 16px;
+      }
+      
+      h1 {
+        font-size: 24px;
+        font-weight: 700;
+        color: #2E7D32;
+        margin-bottom: 8px;
+      }
+      
+      h2 {
+        font-size: 18px;
+        font-weight: 600;
+        color: rgba(0,0,0,0.6);
+        margin-bottom: 24px;
+      }
+      
+      p {
+        line-height: 1.6;
+        margin: 16px 0 24px;
+        font-size: 14px;
+        color: rgba(0,0,0,0.7);
+      }
+      
+      .button {
+        display: inline-block;
+        width: 100%;
+        text-align: center;
+        background: #2E7D32;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: white;
+        padding: 16px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 16px;
+        margin: 8px 0;
+        transition: background 0.3s ease;
+        box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+      }
+      
+      .button:hover {
+        background: #1B5E20;
+      }
+      
+      .button.secondary {
+        background: #8BC34A;
+        box-shadow: 0 4px 12px rgba(139, 195, 74, 0.3);
+      }
+      
+      .button.secondary:hover {
+        background: #689F38;
+      }
+      
+      #loading {
+        color: rgba(0,0,0,0.5);
+        text-align: center;
+        font-size: 14px;
+        margin-top: 16px;
+      }
+      
+      .spinner {
+        border: 3px solid rgba(46, 125, 50, 0.1);
+        border-top: 3px solid #2E7D32;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      @media (max-width: 600px) {
+        #container {
+          margin: 10px;
+          padding: 32px 20px;
+        }
+        
+        h1 {
+          font-size: 20px;
+        }
+        
+        h2 {
+          font-size: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <div class="logo">🐄</div>
+      <h1>CanlıPazar</h1>
+      <h2>Hayvan Alım Satım Platformu</h2>
+      <div id="loading">
+        <div class="spinner"></div>
+        <p>Uygulama açılıyor...</p>
+      </div>
+      <div id="content" style="display: none;">
+        <p>Uygulamayı indirmek için aşağıdaki butona tıklayın:</p>
+        <a href="#" id="appStoreLink" class="button">App Store'dan İndir</a>
+        <a href="#" id="playStoreLink" class="button secondary">Google Play'den İndir</a>
+      </div>
+    </div>
+
+    <script>
+      (function() {
+        // URL'den path'i al
+        const path = window.location.pathname;
+        const pathSegments = path.split('/').filter(segment => segment.length > 0);
+        
+        // PostId'yi çıkar: /animal/{postId} formatından
+        let postId = null;
+        if (pathSegments.length >= 2 && pathSegments[0] === 'animal') {
+          postId = pathSegments[1];
+        } else if (pathSegments.length === 1 && pathSegments[0] === 'animal') {
+          // Query parameter'dan al
+          const urlParams = new URLSearchParams(window.location.search);
+          postId = urlParams.get('id');
+        }
+        
+        console.log('🔗 Path:', path);
+        console.log('🔗 PostId:', postId);
+        
+        // Deep link oluştur
+        const deepLink = postId ? `canlipazar://animal/${postId}` : 'canlipazar://';
+        
+        // Store linkleri
+        const appStoreLink = 'https://apps.apple.com/app/canlipazar/id123456789'; // TODO: Gerçek App Store linkini buraya ekleyin
+        const playStoreLink = 'https://play.google.com/store/apps/details?id=com.canlipazar'; // Android package name: com.canlipazar
+        
+        // Platform tespiti
+        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        const isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+        const isAndroid = /android/i.test(userAgent);
+        
+        console.log('📱 Platform:', isIOS ? 'iOS' : isAndroid ? 'Android' : 'Other');
+        
+        // Store linklerini güncelle
+        document.getElementById('appStoreLink').href = appStoreLink;
+        document.getElementById('playStoreLink').href = playStoreLink;
+        
+        // Deep link'i açmayı dene
+        function tryOpenDeepLink() {
+          console.log('🔗 Deep link açılıyor:', deepLink);
+          
+          // iOS için
+          if (isIOS) {
+            // iOS'ta universal link zaten çalışıyor olmalı, ama yine de deneyelim
+            window.location.href = deepLink;
+            
+            // 2 saniye sonra store'a yönlendir (eğer uygulama açılmadıysa)
+            setTimeout(function() {
+              console.log('⏰ Timeout - Store\'a yönlendiriliyor');
+              showStoreButtons();
+            }, 2000);
+          }
+          // Android için
+          else if (isAndroid) {
+            // Android'de intent kullan
+            const intentLink = postId 
+              ? `intent://animal/${postId}#Intent;scheme=canlipazar;package=com.canlipazar;end`
+              : `intent://#Intent;scheme=canlipazar;package=com.canlipazar;end`;
+            
+            // Intent'i dene
+            window.location.href = intentLink;
+            
+            // 2 saniye sonra store'a yönlendir (eğer uygulama açılmadıysa)
+            setTimeout(function() {
+              console.log('⏰ Timeout - Store\'a yönlendiriliyor');
+              showStoreButtons();
+            }, 2000);
+          }
+          // Diğer platformlar için
+          else {
+            // Deep link'i dene
+            window.location.href = deepLink;
+            
+            // 2 saniye sonra store'a yönlendir
+            setTimeout(function() {
+              console.log('⏰ Timeout - Store\'a yönlendiriliyor');
+              showStoreButtons();
+            }, 2000);
+          }
+        }
+        
+        // Store butonlarını göster
+        function showStoreButtons() {
+          document.getElementById('loading').style.display = 'none';
+          document.getElementById('content').style.display = 'block';
+          
+          // Platforma göre doğru butonu göster
+          if (isIOS) {
+            document.getElementById('playStoreLink').style.display = 'none';
+          } else if (isAndroid) {
+            document.getElementById('appStoreLink').style.display = 'none';
+          }
+        }
+        
+        // Sayfa yüklendiğinde deep link'i açmayı dene
+        if (postId) {
+          // Eğer postId varsa, deep link'i açmayı dene
+          tryOpenDeepLink();
+        } else {
+          // PostId yoksa direkt store butonlarını göster
+          showStoreButtons();
+        }
+        
+        // Sayfa görünürlüğü değiştiğinde kontrol et (uygulama açıldıysa sayfa gizlenir)
+        document.addEventListener('visibilitychange', function() {
+          if (document.hidden) {
+            console.log('✅ Sayfa gizlendi - uygulama açılmış olabilir');
+          }
+        });
+        
+        // Blur event'i (sayfa focus kaybettiğinde)
+        window.addEventListener('blur', function() {
+          console.log('✅ Sayfa focus kaybetti - uygulama açılmış olabilir');
+        });
+      })();
+    </script>
+  </body>
+</html>

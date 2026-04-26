@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.android.vending.BILLING" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <!-- Android 13+ için bildirim izni -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    
+    <!-- Google Sign-In için gerekli queries bloğu -->
+    <queries>
+        <package android:name="com.google.android.gms" />
+        <package android:name="com.google.android.apps.maps" />
+        <provider android:authorities="com.google.android.gms.games.provider" />
+        <provider android:authorities="com.google.android.gms.matchstatus" />
+    </queries>
+
+    <application
+        android:label="CanlıPazar"
+        android:name="${applicationName}"
+        android:icon="@mipmap/launcher_icon"
+        android:enableOnBackInvokedCallback="true"
+        android:extractNativeLibs="false">  <!-- 16KB sayfa boyutu için gerekli -->
+        
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:theme="@style/LaunchTheme"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:hardwareAccelerated="true"
+            android:windowSoftInputMode="adjustResize"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true">
+
+            <!-- Google Sign-In için gerekli intent filter -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:host="oauth2redirect"
+                    android:scheme="${applicationId}"/>
+            </intent-filter>
+
+            <meta-data
+              android:name="io.flutter.embedding.android.NormalTheme"
+              android:resource="@style/NormalTheme"
+              />
+            <meta-data
+              android:name="com.google.firebase.messaging.default_notification_channel_id"
+              android:value="messages_channel"
+              />
+            <!-- KRİTİK: Özel bildirim ikonu - cplogo.png -->
+            <meta-data
+              android:name="com.google.firebase.messaging.default_notification_icon"
+              android:resource="@drawable/ic_notification"
+              />
+           <meta-data
+             android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorPrimary" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="FLUTTER_NOTIFICATION_CLICK"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+            
+            <!-- Deep link intent filter - canlipazar://ilan/{postId} -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:scheme="canlipazar"
+                    android:host="ilan"/>
+            </intent-filter>
+            
+            <!-- Geriye dönük uyumluluk için eski format -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:scheme="canlipazar"
+                    android:host="animal"/>
+            </intent-filter>
+            
+            <!-- KRİTİK: Android App Links - https://canlipazar.com/ilan/{postId} -->
+            <!-- autoVerify="true" ile Android otomatik doğrulama yapar -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:scheme="https"
+                    android:host="canlipazar.com"
+                    android:pathPrefix="/ilan"/>
+            </intent-filter>
+            
+            <!-- Geriye dönük uyumluluk için eski format -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:scheme="https"
+                    android:host="canlipazar.com"
+                    android:pathPrefix="/animal"/>
+            </intent-filter>
+            
+            <!-- www subdomain desteği -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:scheme="https"
+                    android:host="www.canlipazar.com"
+                    android:pathPrefix="/ilan"/>
+            </intent-filter>
+            
+            <!-- canlipazar.net - Ana domain -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:scheme="https"
+                    android:host="canlipazar.net"
+                    android:pathPrefix="/ilan"/>
+            </intent-filter>
+            <!-- canlipazar.net www -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:scheme="https"
+                    android:host="www.canlipazar.net"
+                    android:pathPrefix="/ilan"/>
+            </intent-filter>
+            
+            <!-- Firebase Dynamic Links intent filter -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:scheme="https"
+                    android:host="canlipazar.page.link"/>
+            </intent-filter>
+
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https"
+                      android:host="tilki0024.github.io"
+                      android:pathPrefix="/ilanapps" />
+            </intent-filter>
+        </activity>
+
+        <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver"
+            android:exported="false" />
+        <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+            </intent-filter>
+        </receiver> 
+
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+            
+        <!-- Google Play Services versiyon bilgisi -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+    </application>
+</manifest>

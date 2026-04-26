@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  <!-- KRİTİK: Open Graph Meta Tags - Sosyal Medya Önizlemesi -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="CanlıPazar">
+  <meta property="og:locale" content="tr_TR">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@canlipazar">
+  
+  <!-- iOS Universal Links -->
+  <meta name="apple-itunes-app" content="app-id=6476391295">
+  
+  <!-- Android App Links -->
+  <link rel="alternate" href="android-app://com.canlipazar/https/canlipazar.net/ilan/PLACEHOLDER_ID">
+  
+  <title>İlan Detayı - CanlıPazar</title>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #2E7D32 0%, #8BC34A 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .container {
+      background: white;
+      max-width: 500px;
+      width: 100%;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    
+    .loading {
+      padding: 60px 40px;
+      text-align: center;
+    }
+    
+    .spinner {
+      border: 4px solid rgba(46, 125, 50, 0.1);
+      border-top: 4px solid #2E7D32;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .store-buttons {
+      display: none;
+      padding: 40px;
+      text-align: center;
+    }
+    
+    .store-buttons.show {
+      display: block;
+    }
+    
+    .button {
+      display: inline-block;
+      width: 100%;
+      max-width: 300px;
+      padding: 16px 24px;
+      margin: 8px 0;
+      background: #2E7D32;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+    
+    .button:hover {
+      background: #1B5E20;
+    }
+    
+    .button.secondary {
+      background: #8BC34A;
+    }
+    
+    .button.secondary:hover {
+      background: #689F38;
+    }
+    
+    h1 {
+      font-size: 24px;
+      color: #2E7D32;
+      margin-bottom: 8px;
+    }
+    
+    p {
+      color: rgba(0,0,0,0.7);
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+      <h1>Uygulama açılıyor...</h1>
+      <p>Lütfen bekleyin</p>
+    </div>
+    
+    <div class="store-buttons" id="storeButtons">
+      <h1>CanlıPazar</h1>
+      <p>Uygulamayı indirmek için aşağıdaki butona tıklayın:</p>
+      <a href="#" id="appStoreBtn" class="button">App Store'dan İndir</a>
+      <a href="#" id="playStoreBtn" class="button secondary">Google Play'den İndir</a>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // URL'den ilan ID'sini çıkar
+      const path = window.location.pathname;
+      const pathSegments = path.split('/').filter(s => s.length > 0);
+      
+      let ilanId = null;
+      
+      // /ilan/{ilanId} formatı
+      if (pathSegments.length >= 2 && pathSegments[0] === 'ilan') {
+        ilanId = pathSegments[1];
+      }
+      // /animal/{ilanId} formatı (geriye dönük uyumluluk)
+      else if (pathSegments.length >= 2 && pathSegments[0] === 'animal') {
+        ilanId = pathSegments[1];
+      }
+      // Query parameter
+      else {
+        const params = new URLSearchParams(window.location.search);
+        ilanId = params.get('id');
+      }
+      
+      console.log('🔗 İlan ID:', ilanId);
+      
+      // Platform tespiti
+      const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+      const isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+      const isAndroid = /android/i.test(userAgent);
+      
+      // Store URL'leri
+      const iosAppStoreUrl = 'https://apps.apple.com/app/id6476391295'; // CanlıPazar App Store ID
+      const androidPlayStoreUrl = 'https://play.google.com/store/apps/details?id=com.canlipazar';
+      
+      // Universal Link / App Link
+      const universalLink = ilanId ? `https://canlipazar.net/ilan/${ilanId}` : 'https://canlipazar.net';
+      
+      // Store butonlarını ayarla
+      document.getElementById('appStoreBtn').href = iosAppStoreUrl;
+      document.getElementById('playStoreBtn').href = androidPlayStoreUrl;
+      
+      // KRİTİK: Universal Link / App Link ile uygulamayı açmayı dene
+      function tryOpenApp() {
+        console.log('🔗 Universal Link açılıyor:', universalLink);
+        
+        // Universal Link / App Link direkt çalışmalı
+        // Eğer uygulama yüklüyse otomatik açılır
+        // Eğer yüklü değilse bu sayfa görünür kalır ve store butonları gösterilir
+        
+        // iOS için: Universal Link zaten çalışıyor olmalı
+        // Android için: App Link zaten çalışıyor olmalı
+        // Fallback: Eğer 2 saniye içinde sayfa hala görünürse store butonlarını göster
+        
+        setTimeout(function() {
+          // Sayfa hala görünürse, uygulama açılmamış demektir
+          if (!document.hidden) {
+            console.log('⏰ Timeout - Store butonları gösteriliyor');
+            showStoreButtons();
+          }
+        }, 2000);
+      }
+      
+      function showStoreButtons() {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('storeButtons').classList.add('show');
+        
+        // Platforma göre doğru butonu göster
+        if (isIOS) {
+          document.getElementById('playStoreBtn').style.display = 'none';
+        } else if (isAndroid) {
+          document.getElementById('appStoreBtn').style.display = 'none';
+        }
+      }
+      
+      // Sayfa görünürlüğü değiştiğinde kontrol et
+      document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+          console.log('✅ Sayfa gizlendi - uygulama açılmış olabilir');
+        }
+      });
+      
+      // Blur event (sayfa focus kaybettiğinde)
+      window.addEventListener('blur', function() {
+        console.log('✅ Sayfa focus kaybetti - uygulama açılmış olabilir');
+      });
+      
+      // Sayfa yüklendiğinde uygulamayı açmayı dene
+      if (ilanId) {
+        tryOpenApp();
+      } else {
+        // İlan ID yoksa direkt store butonlarını göster
+        showStoreButtons();
+      }
+    })();
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

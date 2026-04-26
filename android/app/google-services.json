@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "602963135074",
+    "firebase_url": "https://canlipazar-b3697-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "canlipazar-b3697",
+    "storage_bucket": "canlipazar-b3697.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:602963135074:android:b0cbc1cc689532af461f3b",
+        "android_client_info": {
+          "package_name": "com.canlipazar"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDc3tzsLYigdk48mXrTf3Perqpn-0pE3Bg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:602963135074:android:286777f35ea6bc50461f3b",
+        "android_client_info": {
+          "package_name": "com.canlipazar.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDc3tzsLYigdk48mXrTf3Perqpn-0pE3Bg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:602963135074:android:fa010570d4cea80c461f3b",
+        "android_client_info": {
+          "package_name": "com.thingsfree"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDc3tzsLYigdk48mXrTf3Perqpn-0pE3Bg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

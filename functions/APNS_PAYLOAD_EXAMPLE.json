@@ -1,0 +1,60 @@
+{
+  "description": "APNs Push Bildirim Payload Örneği - Mesaj Bildirimi",
+  "example": {
+    "aps": {
+      "alert": {
+        "title": "CanlıPazardan bir mesajınız var",
+        "body": "Merhaba, nasılsın? Yeni mesajınız var."
+      },
+      "sound": "default",
+      "badge": 5,
+      "content-available": 1,
+      "mutable-content": 1
+    },
+    "type": "message",
+    "senderId": "user123",
+    "receiverId": "user456",
+    "messageId": "msg789",
+    "postId": "post123",
+    "text": "Merhaba, nasılsın?",
+    "unreadCount": "5"
+  },
+  "headers": {
+    "apns-priority": "10",
+    "apns-push-type": "alert",
+    "apns-topic": "com.freecycle.canlipazar"
+  },
+  "explanation": {
+    "aps": {
+      "alert": "Bildirim başlığı ve içeriği",
+      "sound": "Bildirim sesi (default veya özel ses dosyası)",
+      "badge": "Uygulama ikonundaki sayı (okunmamış mesaj sayısı)",
+      "content-available": "1 = Silent push, uygulama kapalıyken de çalışır",
+      "mutable-content": "1 = Bildirim içeriği değiştirilebilir (notification extension için)"
+    },
+    "custom_data": {
+      "type": "Bildirim tipi (message, new_animal_post, vb.)",
+      "senderId": "Mesaj gönderen kullanıcı ID",
+      "receiverId": "Mesaj alan kullanıcı ID",
+      "messageId": "Mesaj ID",
+      "postId": "İlan ID (varsa)",
+      "text": "Mesaj metni",
+      "unreadCount": "Okunmamış mesaj sayısı (string olarak)"
+    }
+  },
+  "firebase_functions_example": {
+    "code": "const message = {\n  token: recipientToken,\n  notification: {\n    title: 'CanlıPazardan bir mesajınız var',\n    body: text.substring(0, 100)\n  },\n  data: {\n    type: 'message',\n    senderId: senderId,\n    receiverId: recipientId,\n    messageId: messageId,\n    text: text,\n    unreadCount: unreadCount.toString()\n  },\n  apns: {\n    payload: {\n      aps: {\n        sound: 'default',\n        badge: unreadCount,\n        'content-available': 1,\n        alert: {\n          title: 'CanlıPazardan bir mesajınız var',\n          body: text.substring(0, 100)\n        }\n      }\n    },\n    headers: {\n      'apns-priority': '10',\n      'apns-push-type': 'alert'\n    }\n  }\n};"
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,35 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Genel kural: Herkes okuyabilir, sadece authenticated kullanıcılar yazabilir
+    match /{document=**} {
+      allow read: if true;
+      allow write: if request.auth.uid != null;
+    }
+    
+    // Conversations koleksiyonu için özel kurallar
+    match /conversations/{conversationId} {
+      // Okuma: Kullanıcı kendi mesajlarını okuyabilir
+      allow read: if request.auth.uid != null && 
+                     (request.auth.uid in resource.data.users || 
+                      request.auth.uid == resource.data.sender || 
+                      request.auth.uid == resource.data.recipient);
+      
+      // Yazma: Kullanıcı kendi mesajlarını yazabilir/güncelleyebilir
+      allow create: if request.auth.uid != null && 
+                       (request.auth.uid == request.resource.data.sender || 
+                        request.auth.uid in request.resource.data.users);
+      
+      allow update: if request.auth.uid != null && 
+                       (request.auth.uid in resource.data.users || 
+                        request.auth.uid == resource.data.sender || 
+                        request.auth.uid == resource.data.recipient);
+      
+      // Silme: Kullanıcı kendi mesajlarını silebilir (deletedBy güncellemesi için)
+      allow delete: if request.auth.uid != null && 
+                       (request.auth.uid in resource.data.users || 
+                        request.auth.uid == resource.data.sender || 
+                        request.auth.uid == resource.data.recipient);
+    }
+  }
+}
